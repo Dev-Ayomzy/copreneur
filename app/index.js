@@ -10,7 +10,7 @@ export default function index (){
             flex: 2,
             backgroundColor: "white",
         }}>
-            <Text>coprenuer</Text>
+            <Text>copreneur</Text>
             <Text>Where developer meet entreprenuer </Text>
             </View>
 
@@ -18,7 +18,7 @@ export default function index (){
               flex: 2,
               backgroundColor: "yellow",
             }}>
-                <Text style={style.p}>I am a entreprenuer</Text>
+                <Text style={style.p}>I am a entrepreneur</Text>
             </View>
 
             <View style={{
