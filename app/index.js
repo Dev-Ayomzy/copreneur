@@ -18,14 +18,14 @@ export default function index (){
               flex: 2,
               backgroundColor: "yellow",
             }}>
-                <Text style={style.p}>I am a entrepreneur</Text>
+                <Text style={styles.p}>I am a entrepreneur</Text>
             </View>
 
             <View style={{
               flex: 2,
               backgroundColor: "oldlace",
             }}>
-                <Text style={style.p}>I am a developer</Text>
+                <Text style={styles.p}>I am a developer</Text>
               </View>
         </view>
   )  
