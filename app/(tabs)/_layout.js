@@ -6,7 +6,7 @@ import { colors } from "../../theme/colors";
 
 export default function Layout () {
     return (
-        <Tabs screenLayout={{ tabBarActiveTintColor: colors.brown300 }}>
+        <Tabs screenOptions={{ tabBarActiveTintColor: colors.brown300 }}>
             <Tabs.Screen
             name="index"
             options={{
@@ -15,21 +15,21 @@ export default function Layout () {
                 tabBarIcon: ({ color }) => (<Feather name="home" size={24} color={color} /> )
             }}/>
             <Tabs.Screen
-            name="index"
+            name="find"
             options={{
                 title: "Find",
                 headerShown: false,
                 tabBarIcon: ({ color }) => (<AntDesign name="find" size={24} color={color} /> )
             }}/>
             <Tabs.Screen
-            name="index"
+            name="cv"
             options={{
                 title: "Cv",
                 headerShown: false,
                 tabBarIcon: ({ color }) => (<Foundation name="clipboard-notes" size={24} color={color} /> )
             }}/>
             <Tabs.Screen
-            name="index"
+            name="me"
             options={{
                 title: "Me",
                 headerShown: false,
