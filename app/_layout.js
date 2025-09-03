@@ -27,6 +27,12 @@ export default function RootLayout() {
         title: "About copreneur ",
         headerShown: false,
       }}/>
+      <Stack.Screen
+      name="signin"
+      options={{
+        title: "sign in ",
+        headerShown: false,
+      }}/>
     </Stack>
   )
 }
