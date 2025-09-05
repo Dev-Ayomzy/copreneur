@@ -1,8 +1,12 @@
 import { Link } from "expo-router";
+import { useState } from "react";
 import { Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { colors } from "../theme/colors";
 
-export default function Signup () {
+export default function signup () {
+    const [email,setEmail] = useState("");
+    const [password,setpassword] = useState("");
+    const [passwordConfirmation,setpasswordConfirmation] = useState("");
     return(
         <View style={Styles.wrapper}> 
             {/* header group */}
@@ -39,11 +43,31 @@ export default function Signup () {
                     <TextInput
                     keyboardType="email-address"
                     style={Styles.input}
-                    placeholder="eg. johndoe@example.com"/>
+                    placeholder="eg. johndoe@example.com"
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}/>
+
                     <TextInput
+                    secureTextEntry={true}
                     keyboardType="default"
                     style={Styles.input}
-                    placeholder="create password"/>
+                    placeholder="create password"
+                    value={password}
+                    onChangeText={(text) => setpassword(text)}/>
+                    
+                    {password.length >= 8 &&
+                    <TextInput
+                    secureTextEntry={true}
+                    keyboardType="default"
+                    style={Styles.input}
+                    placeholder="confirm password"
+                    value={passwordConfirmation}
+                    onChangeText={(text) => setpasswordConfirmation(text)}/>}
+
+                    {password.length >= 8 && password == passwordConfirmation &&
+                    <TouchableOpacity style={Styles.signInBtn}>
+                    <Text style={Styles.signInText}>Create an Account</Text>  
+                    </TouchableOpacity>}
                 </View>
 
                 {/* already have an account? */}
