@@ -6,12 +6,12 @@ export default function index (){
   return (
     <SafeAreaProvider>
       <SafeAreaView>
-        <Text>Welcome default Screen</Text>
+        <Text className="text-green-500">Welcome default Screen</Text>
         <Text>Welcome to coprenuer</Text>
         <Link href="/signup"
         styles={{
             fontWeight: "bold",
-            Color: "brown"
+            Color: "brown",
         }}>Create a new account</Link>
       </SafeAreaView>    
     </SafeAreaProvider>
