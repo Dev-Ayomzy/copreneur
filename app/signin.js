@@ -1,98 +1,171 @@
-import { Link } from "expo-router";
-import { Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useFormik } from "formik";
+import { useState } from "react";
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth } from "../config/firebase.secret";
 import { colors } from "../theme/colors";
+import { signinValidation } from "../utils/signin-validation-schema";
 
-export default function Signin () {
-    return(
-        <View style={Styles.wrapper}> 
-            {/* header group */}
-            <View style={Styles.header}>
-                <Text style={Styles.brandName}>copreneur</Text>
-                <Text style={Styles.brandDesc}>Where entrepreneurs collaborate with developer</Text>
-            </View>
+export default function Signin() {
+    const [isLoading,setIsLoading] = useState(false);
+    const authenticated = getAuth();
 
-            {/* {body group} */}
-            <View style={Styles.body}>
-                <Text style={Styles.bodyText}>Sign in to your account</Text>
+    const router = useRouter();
 
-                {/* create account with google */}
-                <TouchableOpacity style={Styles.signInBtn}>
-                    <Image
-                    style={{
-                        width: 36,
-                        height: 36
-                    }}
-                    source={require("../assets/images/google.png.png")}/>
-                    <Text style={Styles.signInText}>Google</Text>  
-                </TouchableOpacity>
+    const { handleBlur, handleChange, handleSubmit, touched, errors, values} = useFormik({
+        initialValues: { email:"", password:"" },
+        onSubmit: async () => {
+            setIsLoading(true);
 
-                {/* OR */}
-                <View style={Styles.orSec}>
-                    <View style={Styles.line}></View>
-                    <Text style={Styles.orText}>OR</Text>
-                    <View style={Styles.line}></View>
+            try {
+                // create a new user account
+                await signInWithEmailAndPassword(auth,values.email,values.password);
+                
+                setIsLoading(false); // stops ActivityIndicator
 
+                //redirect to home
+                if (authenticated.currentUser) {
+                    router.replace("/(tabs)");    
+                }
+            } catch (error) {
+                Alert.alert(
+                    "Message",
+                    "invalid email or password",
+                    [{ text: "okay"}]
+                );
+                console.error(error);
+                setIsLoading(false);
+            }
+            
+        },
+        validationSchema: signinValidation
+    });
+
+    return (
+        <KeyboardAvoidingView
+            style={styles.wrapper}
+            behavior="padding"
+            keyboardVerticalOffset={Platform.select({
+                ios: 0,
+                android: -StatusBar.currentHeight,
+            })}>
+
+            <ScrollView
+                contentContainerStyle={styles.ScrollViewContainer}
+                showsVerticalScrollIndicator={false}>
+
+                {/* header group */}
+                <View style={styles.header}>
+                    <Text style={styles.brandName}>Copreneur</Text>
+                    <Text style={styles.brandDesc}>Where entrepreneurs collaborate with developers</Text>
                 </View>
 
-                {/* create account with email and password */}
-                <View style={Styles.emailSec}>
-                    <TextInput
-                    keyboardType="email-address"
-                    style={Styles.input}
-                    placeholder="eg. johndoe@example.com"/>
-                    <TextInput
-                    keyboardType="default"
-                    style={Styles.input}
-                    placeholder="create password"/>
+                {/* body group  */}
+                <View style={styles.body}>
+                    <Text style={styles.bodyText}>Sign in to your accont</Text>
+
+                    {/* create account with google */}
+                    <TouchableOpacity style={styles.signupBtn}>
+                        <Image
+                            style={{
+                                width: 36,
+                                height: 36,
+                            }}
+                            source={require("../assets/images/google.png.png")}></Image>
+                        <Text style={styles.signInText}>Google</Text>
+                    </TouchableOpacity>
+
+                    {/* OR */}
+                    <View style={styles.orSec}>
+                        <View style={styles.line}></View>
+                        <Text style={styles.orText}>OR</Text>
+                        <View style={styles.line}></View>
+                    </View>
+
+                    {/* create account with email and password */}
+                    <View style={styles.form}>
+                        <View>
+                            <TextInput
+                            keyboardType="email-address"
+                            style={styles.input}
+                            placeholder="eg. john@example.com"
+                            value={values.email}
+                            onChangeText={handleChange("email")}
+                            onBlur={handleBlur("email")} 
+                            />
+                            {errors.email && touched.email && 
+                            <Text style={styles.errormsg}>{errors.email}</Text>}
+                        </View>
+
+                        <View>
+                            <TextInput
+                            secureTextEntry={true}
+                            keyboardType="default"
+                            style={styles.input}
+                            placeholder="create password"
+                            value={values.password}
+                            onChangeText={handleChange("password")} 
+                            />
+                            {errors.password && touched.password && 
+                            <Text style={styles.errormsg}>{errors.password}</Text>}
+                        </View>
+
+                        <TouchableOpacity onPress={handleSubmit} style={styles.signupBtn}>
+                            {isLoading ?
+                            <ActivityIndicator size="large" color="white"/> :
+                            <Text style={styles.signInText}>Sign in</Text>}
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* already have an account? */}
+                    <View style={styles.already}>
+                        <Text style={styles.alreadyText}>Don't have an accont</Text>
+                        <Link href="/signin" style={styles.alreadyLink}>Go to sign up</Link>
+                    </View>
                 </View>
 
-                {/* already have an account? */}
-                <View style ={Styles.already}>
-                    <Text style={Styles.alreadyText}>Don't have an account?</Text>
-                    <Link href="/signup" style={Styles.alreadyLink}>Go to sign up</Link>
-
+                {/* bottom group */}
+                <View style={styles.footer}>
+                    <Link href="/about" style={styles.footerLink}>About Copreneur</Link>
+                    <Link href="/about" style={styles.footerLink}>Home</Link>
                 </View>
-            </View>
-
-            {/* bottom grouo */}
-            <View style={Styles.footer}>
-                <Link href="/about" style={Styles.footerLink}>About copreneur</Link>
-                <Link href="/about" style={Styles.footerLink}>Home</Link>
-
-            </View>
-        </View>
-    );
+            </ScrollView>
+        </KeyboardAvoidingView>
+    )
 }
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        display: "flex",
-        justifyContent: "space-between",
-        getBackgroundColor: colors.brown100,
+        backgroundColor: colors.brown200,
         paddingTop: StatusBar.currentHeight,
-        paddingBottom: 40
+    },
+    ScrollViewContainer: {
+        flexGrow: 1,
+        justifyContent: "space-between",
+        marginBottom: 40,
     },
     header: {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column", // the direction we want the item to be arranged
         alignItems: "center",
-        gap: 8
+        gap: 8,
     },
     brandName: {
         fontSize: 46,
         fontWeight: "bold",
-        colors: colors.brown400,
+        color: colors.brown400
     },
     brandDesc: {
         fontWeight: "bold",
         color: colors.brown400,
-        textAlign: "center"
+        textAlign: "center",
     },
-    body:{
-        paddingHorizontal: 20,
+    body: {
+        display: "flex",
         gap: 18,
-        paddingHorizontal: 40,
+        paddingHorizontal: 20,
     },
     bodyText: {
         color: colors.brown400,
@@ -101,16 +174,16 @@ const Styles = StyleSheet.create({
     already: {
         display: "flex",
         flexDirection: "row",
-        gap:4
+        gap: 4,
     },
     alreadyText: {
-        color:colors.brown400,
+        color: colors.brown400,
     },
     alreadyLink: {
-        color:colors.brown300,
-        fontWeight: "bold"
+        color: colors.brown300,
+        fontWeight: "bold",
     },
-    signInBtn: {
+    signupBtn: {
         height: 56,
         display: "flex",
         flexDirection: "row",
@@ -119,6 +192,7 @@ const Styles = StyleSheet.create({
         gap: 16,
         backgroundColor: colors.brown400,
         borderRadius: 4,
+
     },
     signInText: {
         color: colors.brown100,
@@ -131,34 +205,35 @@ const Styles = StyleSheet.create({
     },
     footerLink: {
         color: colors.brown400,
-        fontSize:12
+        fontSize: 12,
     },
     orSec: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-evenly"  ,
-        alignItems: "center", 
+        justifyContent: "space-evenly",
+        alignItems: "center",
     },
     orText: {
         fontSize: 16,
-        color: colors.brown400,
+        color: colors.brown400
     },
     line: {
         width: "30%",
         borderTopWidth: 1,
         borderTopColor: colors.brown300,
-
     },
-    emailSec: {
-        gap: 8
+    form: {
+        gap: 12,
     },
     input: {
         borderWidth: 1,
         borderColor: colors.brown400,
         borderRadius: 4,
         fontSize: 16,
-        paddingHorizontal: 6
-
+        paddingHorizontal: 6,
+    },
+    errormsg: {
+        color: "red",
+        fontSize: 12
     }
-})
-
+});
