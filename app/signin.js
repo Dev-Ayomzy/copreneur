@@ -3,7 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { auth } from "../config/firebase.secret";
+import { auth } from "../secrets/firebase";
 import { colors } from "../theme/colors";
 import { signinValidation } from "../utils/signin-validation-schema";
 
@@ -121,7 +121,7 @@ export default function Signin() {
                     {/* already have an account? */}
                     <View style={styles.already}>
                         <Text style={styles.alreadyText}>Don't have an accont</Text>
-                        <Link href="/signin" style={styles.alreadyLink}>Go to sign up</Link>
+                        <Link href="/signup" style={styles.alreadyLink}>Go to sign up</Link>
                     </View>
                 </View>
 
