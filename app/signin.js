@@ -3,7 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { auth } from "../secrets/firebase";
+import { auth } from "../settings/firebase";
 import { colors } from "../theme/colors";
 import { signinValidation } from "../utils/signin-validation-schema";
 
@@ -21,18 +21,17 @@ export default function Signin() {
             try {
                 // create a new user account
                 await signInWithEmailAndPassword(auth,values.email,values.password);
-                
                 setIsLoading(false); // stops ActivityIndicator
 
                 //redirect to home
                 if (authenticated.currentUser) {
-                    router.replace("/(tabs)");    
+                    router.replace("/(tabs)");
                 }
             } catch (error) {
                 Alert.alert(
                     "Message",
-                    "invalid email or password",
-                    [{ text: "okay"}]
+                    "Invalid email or password",
+                    [{ text: "Okay"}]
                 );
                 console.error(error);
                 setIsLoading(false);
@@ -63,7 +62,7 @@ export default function Signin() {
 
                 {/* body group  */}
                 <View style={styles.body}>
-                    <Text style={styles.bodyText}>Sign in to your accont</Text>
+                    <Text style={styles.bodyText}>Sign in to your account</Text>
 
                     {/* create account with google */}
                     <TouchableOpacity style={styles.signupBtn}>
@@ -103,7 +102,7 @@ export default function Signin() {
                             secureTextEntry={true}
                             keyboardType="default"
                             style={styles.input}
-                            placeholder="create password"
+                            placeholder="your password"
                             value={values.password}
                             onChangeText={handleChange("password")} 
                             />
@@ -120,7 +119,7 @@ export default function Signin() {
 
                     {/* already have an account? */}
                     <View style={styles.already}>
-                        <Text style={styles.alreadyText}>Don't have an accont</Text>
+                        <Text style={styles.alreadyText}>Don't have an account?</Text>
                         <Link href="/signup" style={styles.alreadyLink}>Go to sign up</Link>
                     </View>
                 </View>
@@ -128,7 +127,7 @@ export default function Signin() {
                 {/* bottom group */}
                 <View style={styles.footer}>
                     <Link href="/about" style={styles.footerLink}>About Copreneur</Link>
-                    <Link href="/about" style={styles.footerLink}>Home</Link>
+                    <Link href="/" style={styles.footerLink}>Home</Link>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

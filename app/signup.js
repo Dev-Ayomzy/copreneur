@@ -4,7 +4,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { auth, db } from "../secrets/firebase";
+import { auth, db } from "../settings/firebase";
 import { colors } from "../theme/colors";
 import { signupValidation } from "../utils/signup-validation-schema";
 
@@ -22,7 +22,6 @@ export default function Signup() {
             try {
                 // create a new user account
                 const user = await createUserWithEmailAndPassword(auth,values.email,values.password);
-                
                 setIsLoading(false); // stops ActivityIndicator
 
                 // update user's profile
@@ -163,7 +162,6 @@ export default function Signup() {
                             <Text style={styles.errormsg}>{errors.password}</Text>}
                         </View>
 
-                       
                         <View>
                             <TextInput
                             secureTextEntry={true}
