@@ -56,8 +56,6 @@ export default function Create() {
         validationSchema: createPostValidation
     });
 
-    console.log(values.content)
-
     return (
         <KeyboardAvoidingView
             style={styles.wrapper}
